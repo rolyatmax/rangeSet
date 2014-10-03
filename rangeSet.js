@@ -22,20 +22,13 @@ RangeSet.prototype = {
 
                 if (low === num && high === num) {
                     this._ranges.splice(i, 1);
-                    break;
-                }
-
-                if (low === num) {
+                } else if (low === num) {
                     this._ranges[i][0] = low + 1;
-                    break;
-                }
-
-                if (high === num) {
+                } else if (high === num) {
                     this._ranges[i][1] = high - 1;
-                    break;
+                } else {
+                    this._ranges.splice(i, 1, [low, num - 1], [num + 1, high]);
                 }
-
-                this._ranges.splice(i, 1, [low, num - 1], [num + 1, high]);
                 break;
             }
         }
@@ -56,13 +49,12 @@ RangeSet.prototype = {
             }
 
             for (var i = 0, len = this._ranges.length; i < len; i++) {
-                if (_contains(this._ranges[i], num)) {
-                    break;
-                }
-
                 low = this._ranges[i][0];
                 high = this._ranges[i][1];
 
+                if (_contains(this._ranges[i], num)) {
+                    break;
+                }
                 if (low - 1 === num) {
                     this._ranges[i][0] = num;
                     break;
