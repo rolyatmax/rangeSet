@@ -73,7 +73,7 @@ RangeSet.prototype = {
                     this._ranges.splice(i, 0, [num, num]);
                     break;
                 }
-                // the last range doesn't contain
+                // if none of the previous ranges or gaps contain the num
                 if (len - 1 === i) {
                     this._ranges.push([num, num]);
                 }
@@ -110,6 +110,5 @@ function _contains(range, num) {
 function _isArray(obj) {
     return Object.prototype.toString.call(obj) === '[object Array]';
 }
-
 
 module.exports = RangeSet;
