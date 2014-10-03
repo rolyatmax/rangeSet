@@ -1,7 +1,7 @@
 RangeSet
 ========
 
-A little library for keeping track of a set of large numbers using ranges.
+A little library for keeping track of sets of large numbers using ranges.
 
     var RangeSet = require('rangeSet');
 
