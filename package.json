@@ -2,11 +2,11 @@
   "name": "ranges",
   "version": "0.0.1",
   "description": "keeps track of integers in a set by using ranges",
-  "main": "ranges.js",
+  "main": "rangeSet.js",
   "scripts": {
     "test": "test.js"
   },
-  "author": "Taylor Baldwin",
+  "author": "Taylor Baldwin <taylorbaldwin@gmail.com> (https://tbaldw.in)",
   "license": "ISC",
   "devDependencies": {
     "lodash": "*"
