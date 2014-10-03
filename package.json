@@ -1,0 +1,14 @@
+{
+  "name": "ranges",
+  "version": "0.0.1",
+  "description": "keeps track of integers in a set by using ranges",
+  "main": "ranges.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Taylor Baldwin",
+  "license": "ISC",
+  "devDependencies": {
+    "lodash": "*"
+  }
+}
