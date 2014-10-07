@@ -45,6 +45,53 @@ RangeSet.prototype = {
     // },
 
     _removeRange: function(range) {
+        // go through all the ranges
+
+
+        // if range ends before curRange
+        // then we're done
+
+        // if range starts after curRange[1]
+        // then continue
+
+        // if range starts before curRange or on curRange[0]
+        // ... and ends before curRange[1]
+        //     then curRange[0] = range[1] + 1
+        // ... and ends after or on curRange[1]
+        //     then splice out curRange
+
+        // if range starts after curRange[0]
+        // ... and ends on or after curRange[1]
+        //     then curRange[1] = range[0] - 1
+        // ... and ends before curRange[1]
+        //     then splice in two new ranges:
+        //         [curRange[0], range[0] - 1] and [range[1] + 1, curRange[1]]
+
+
+
+        var curRange;
+        for (var i = 0, len = this._ranges.length; i < len; i++) {
+            curRange = this._ranges[i];
+
+            if (range[1] < curRange[0]) {
+                return;
+            }
+
+            if (range[0] > curRange[1]) {
+                continue;
+            }
+
+            if (range[0] <= curRange[0]) {
+                if (range[1] < curRange[1]) {
+                    curRange[0] = range[1] + 1;
+                } else {
+                    this._ranges.splice(i, 1);
+//////////////// WAIT - CAN'T MAKE CHANGES TO this._ranges while looping over it
+                }
+            }
+
+        }
+
 
     },
 
@@ -78,7 +125,7 @@ RangeSet.prototype = {
                 return;
             }
 
-            isLastOverlap = !nextRange || !_hasOverlap(nextRange, range)
+            isLastOverlap = !nextRange || !_hasOverlap(nextRange, range);
             if (overlapStart !== undefined && isLastOverlap) {
                 // curRange is the last overlapping range
                 low = Math.min(overlapStart, range[0]);
