@@ -34,49 +34,58 @@ RangeSet.prototype = {
         }
     },
 
-    add: function(nums) {
-        if (!_isArray(nums)) {
-            nums = [nums];
+    // add: function(nums) {
+    //     if (_isNumber(nums)) {
+    //         return this._addArray([nums]);
+    //     }
+
+    //     if (_isArray(nums)) {
+    //         return this._addArray(nums);
+    //     }
+    // },
+
+    _removeRange: function(range) {
+
+    },
+
+    _addRange: function(range) {
+        if (!this._ranges.length) {
+            this._ranges.push(range);
+            return;
         }
 
-        var low, high, num;
-        for (var j = 0, leng = nums.length; j < leng; j++) {
-            num = nums[j];
+        var curRange, nextRange, overlapStart, overlapStartIdx,
+            overlappingRangeCount, isLastOverlap, low, high;
+        for (var i = 0, len = this._ranges.length; i < len; i++) {
+            curRange = this._ranges[i];
 
-            if (!this._ranges.length) {
-                this._ranges.push([num, num]);
-                continue;
+            // if the range comes before all the other ranges with no overlap
+            if (range[1] < curRange[0] - 1) {
+                this._ranges.splice(i, 0, range);
+                return;
             }
 
-            for (var i = 0, len = this._ranges.length; i < len; i++) {
-                low = this._ranges[i][0];
-                high = this._ranges[i][1];
+            if (overlapStart === undefined && _hasOverlap(curRange, range)) {
+                overlapStartIdx = i;
+                overlapStart = curRange[0];
+            }
 
-                if (_contains(this._ranges[i], num)) {
-                    break;
-                }
-                if (low - 1 === num) {
-                    this._ranges[i][0] = num;
-                    break;
-                }
-                if (high + 1 === num) {
-                    this._ranges[i][1] = num;
+            nextRange = this._ranges[i + 1];
+            if (overlapStart === undefined && !nextRange) {
+                // last loop and no overlapStart found
+                // it must come after all the other ranges
+                this._ranges.push(range);
+                return;
+            }
 
-                    // if this closes a gap, merge the two ranges
-                    nextRange = this._ranges[i + 1];
-                    if (nextRange && nextRange[0] - 1 === num) {
-                        this._ranges.splice(i, 2, [low, nextRange[1]]);
-                    }
-                    break;
-                }
-                if (num < low) {
-                    this._ranges.splice(i, 0, [num, num]);
-                    break;
-                }
-                // if none of the previous ranges or gaps contain the num
-                if (len - 1 === i) {
-                    this._ranges.push([num, num]);
-                }
+            isLastOverlap = !nextRange || !_hasOverlap(nextRange, range)
+            if (overlapStart !== undefined && isLastOverlap) {
+                // curRange is the last overlapping range
+                low = Math.min(overlapStart, range[0]);
+                high = Math.max(curRange[1], range[1]);
+                overlappingRangeCount = i - overlapStartIdx + 1;
+                this._ranges.splice(overlapStartIdx, overlappingRangeCount, [low, high]);
+                return;
             }
         }
     },
@@ -109,6 +118,16 @@ function _contains(range, num) {
 
 function _isArray(obj) {
     return Object.prototype.toString.call(obj) === '[object Array]';
+}
+
+function _isNumber(obj) {
+    return typeof obj === 'number';
+}
+
+function _hasOverlap(rangeOne, rangeTwo) {
+    var lowest = rangeOne[0] <= rangeTwo[0] ? rangeOne : rangeTwo;
+    var highest = lowest === rangeOne ? rangeTwo : rangeOne;
+    return lowest[1] >= highest[0] - 1;
 }
 
 module.exports = RangeSet;

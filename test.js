@@ -3,24 +3,36 @@ var RangeSet = require('./rangeSet');
 
 var set = new RangeSet();
 
-set.add([1, 2, 3]);
-set.add([6, 7, 8]);
-console.log('ranges:', set._ranges);
+var rangesToAdd = [
+    [20, 50],
+    [40, 70],
+    [71, 80],
+    [90, 90],
+    [91, 91],
+    [4, 7],
+    [82, 85],
+    [84, 110],
+    [1, 120]
+];
 
-set.add([9, 14]);
-console.log('adding 9, 14:', set._ranges);
 
-set.add(15);
-console.log('adding 15:', set._ranges);
+for (var i = 0, len = rangesToAdd.length; i < len; i++) {
+    set._addRange(rangesToAdd[i]);
+    console.log('adding', rangesToAdd[i], ':', set._ranges);
+}
 
-set.remove([2, 17]);
-console.log('removing 2, 17:', set._ranges);
 
-set.remove(1);
-console.log('removing 1:', set._ranges);
 
-set.add([5, 4]);
-console.log('adding 5, 4:', set._ranges);
+
+
+
+
+// set.remove([2, 17]);
+// console.log('removing 2, 17:', set._ranges);
+
+// set.remove(1);
+// console.log('removing 1:', set._ranges);
+
 console.log('------------------------');
 
 
