@@ -112,6 +112,10 @@ RangeSet.prototype = {
     },
 
     removeRange: function(range) {
+        if (range[0] > range[1]) {
+            throw 'Invalid range: ' + range[0] + '-' + range[1];
+        }
+
         var rangesToRemove = [];
         var curRange;
         for (var i = 0, len = this._ranges.length; i < len; i++) {
@@ -147,6 +151,10 @@ RangeSet.prototype = {
     },
 
     addRange: function(range) {
+        if (range[0] > range[1]) {
+            throw 'Invalid range: ' + range[0] + '-' + range[1];
+        }
+
         if (!this._ranges.length) {
             this._ranges.push(range);
             return;
