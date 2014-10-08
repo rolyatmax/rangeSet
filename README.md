@@ -7,13 +7,21 @@ A little library for keeping track of sets of large numbers using ranges.
 
     var set = new RangeSet();
 
-    // .add() takes an int or an array of ints
+    // .add() takes an int, an array of ints, or RangeSet instance
     set.add(1);
     set.add([2, 3, 6, 7, 8]);
+    set.add(anotherRangeSet);
 
-    // .remove() takes an int or an array of ints
+    // .remove() takes an int, an array of ints, or RangeSet instance
     set.remove(8);
     set.remove([2, 7]);
+    set.remove(anotherRangeSet);
+
+    // .addRange() takes a range in the form [1, 100], inclusive of both ints
+    set.addRange([1, 100]);
+
+    // .removeRange() takes a range in the form [1, 100], inclusive of both ints
+    set.removeRange([50, 150]);
 
     // .contains() takes an int and returns a boolean
     set.contains(2); // false

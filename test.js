@@ -17,7 +17,7 @@ var rangesToAdd = [
 
 
 for (var i = 0, len = rangesToAdd.length; i < len; i++) {
-    set._addRange(rangesToAdd[i]);
+    set.addRange(rangesToAdd[i]);
     console.log('adding', rangesToAdd[i], ':', set._ranges);
 }
 
@@ -36,16 +36,23 @@ for (var i = 0, len = rangesToAdd.length; i < len; i++) {
 console.log('------------------------');
 
 
-// var start = Date.now();
-// set.add(lodash.range(0, 99999));
-// set.remove(lodash.range(46, 860, 2));
-// set.remove(lodash.range(0, 401));
-// set.add(lodash.range(25422, 435231));
-// set.remove(lodash.range(66666, 435230, 25000));
-// set.remove(lodash.range(402, 979));
-// set.remove(lodash.range(980, 99998));
+var start = Date.now();
+set.addRange([0, 99999]);
+console.log('add 0, 99999:', set._ranges);
+set.removeRange([46, 860]);
+console.log('remove 46, 860:', set._ranges);
+set.removeRange([0, 401]);
+console.log('remove 0, 401:', set._ranges);
+set.addRange([25422, 435231]);
+console.log('add 25422, 435231:', set._ranges);
+set.removeRange([66666, 435230]);
+console.log('remove 66666, 435230:', set._ranges);
+set.removeRange([402, 979]);
+console.log('remove 402, 979:', set._ranges);
+set.removeRange([980, 99998]);
+console.log('remove 980, 99998:', set._ranges);
 
-// console.log('Performance (ms):', Date.now() - start);
-// console.log('current set:', set._ranges);
-// console.log('max', set.max());
-// console.log('min', set.min());
+console.log('Performance (ms):', Date.now() - start);
+console.log('current set:', set._ranges);
+console.log('max', set.max());
+console.log('min', set.min());

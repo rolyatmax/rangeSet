@@ -3,7 +3,37 @@ function RangeSet() {
 }
 
 RangeSet.prototype = {
+    // this method accepts ints, arrays of ints, and RangeSet instances
     remove: function(nums) {
+        if (nums instanceof RangeSet) {
+            for (var i = 0, len = nums._ranges.length; i < len; i++) {
+                this.removeRange(nums._ranges[i]);
+            }
+            return;
+        }
+
+        if (!_isNumber(nums) && !_isArray(nums)) {
+            throw 'Type Error: expecting int, array of ints, or RangeSet';
+        }
+        this._removeInts(nums);
+    },
+
+    // this method accepts ints, arrays of ints, and RangeSet instances
+    add: function(nums) {
+        if (nums instanceof RangeSet) {
+            for (var i = 0, len = nums._ranges.length; i < len; i++) {
+                this.addRange(nums._ranges[i]);
+            }
+            return;
+        }
+
+        if (!_isNumber(nums) && !_isArray(nums)) {
+            throw 'Type Error: expecting int, array of ints, or RangeSet';
+        }
+        this._addInts(nums);
+    },
+
+    _removeInts: function(nums) {
         if (!_isArray(nums)) {
             nums = [nums];
         }
@@ -34,47 +64,61 @@ RangeSet.prototype = {
         }
     },
 
-    // add: function(nums) {
-    //     if (_isNumber(nums)) {
-    //         return this._addArray([nums]);
-    //     }
+    _addInts: function(nums) {
+        if (!_isArray(nums)) {
+            nums = [nums];
+        }
 
-    //     if (_isArray(nums)) {
-    //         return this._addArray(nums);
-    //     }
-    // },
+        var low, high, num;
+        for (var j = 0, leng = nums.length; j < leng; j++) {
+            num = nums[j];
 
-    _removeRange: function(range) {
-        // go through all the ranges
+            if (!this._ranges.length) {
+                this._ranges.push([num, num]);
+                continue;
+            }
 
+            for (var i = 0, len = this._ranges.length; i < len; i++) {
+                low = this._ranges[i][0];
+                high = this._ranges[i][1];
 
-        // if range ends before curRange
-        // then we're done
+                if (_contains(this._ranges[i], num)) {
+                    break;
+                }
+                if (low - 1 === num) {
+                    this._ranges[i][0] = num;
+                    break;
+                }
+                if (high + 1 === num) {
+                    this._ranges[i][1] = num;
 
-        // if range starts after curRange[1]
-        // then continue
+                    // if this closes a gap, merge the two ranges
+                    nextRange = this._ranges[i + 1];
+                    if (nextRange && nextRange[0] - 1 === num) {
+                        this._ranges.splice(i, 2, [low, nextRange[1]]);
+                    }
+                    break;
+                }
+                if (num < low) {
+                    this._ranges.splice(i, 0, [num, num]);
+                    break;
+                }
+                // if none of the previous ranges or gaps contain the num
+                if (len - 1 === i) {
+                    this._ranges.push([num, num]);
+                }
+            }
+        }
+    },
 
-        // if range starts before curRange or on curRange[0]
-        // ... and ends before curRange[1]
-        //     then curRange[0] = range[1] + 1
-        // ... and ends after or on curRange[1]
-        //     then splice out curRange
-
-        // if range starts after curRange[0]
-        // ... and ends on or after curRange[1]
-        //     then curRange[1] = range[0] - 1
-        // ... and ends before curRange[1]
-        //     then splice in two new ranges:
-        //         [curRange[0], range[0] - 1] and [range[1] + 1, curRange[1]]
-
-
-
+    removeRange: function(range) {
+        var rangesToRemove = [];
         var curRange;
         for (var i = 0, len = this._ranges.length; i < len; i++) {
             curRange = this._ranges[i];
 
             if (range[1] < curRange[0]) {
-                return;
+                break;
             }
 
             if (range[0] > curRange[1]) {
@@ -85,17 +129,24 @@ RangeSet.prototype = {
                 if (range[1] < curRange[1]) {
                     curRange[0] = range[1] + 1;
                 } else {
-                    this._ranges.splice(i, 1);
-//////////////// WAIT - CAN'T MAKE CHANGES TO this._ranges while looping over it
+                    rangesToRemove.push(i);
+                }
+            } else {
+                if (range[1] >= curRange[1]) {
+                    curRange[1] = range[0] - 1;
+                } else {
+                    this._ranges.splice(i, 1,
+                        [curRange[0], range[0] - 1], [range[1] + 1, curRange[1]]);
+                    return;
                 }
             }
-
         }
-
-
+        if (rangesToRemove.length) {
+            this._ranges.splice(rangesToRemove[0], rangesToRemove.length);
+        }
     },
 
-    _addRange: function(range) {
+    addRange: function(range) {
         if (!this._ranges.length) {
             this._ranges.push(range);
             return;
