@@ -69,7 +69,7 @@ RangeSet.prototype = {
             nums = [nums];
         }
 
-        var low, high, num;
+        var low, high, num, nextRange;
         for (var j = 0, leng = nums.length; j < leng; j++) {
             num = nums[j];
 

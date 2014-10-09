@@ -5,13 +5,14 @@ var set = new RangeSet();
 
 var rangesToAdd = [
     [20, 50],
-    [40, 70],
-    [71, 80],
+    [60, 70],
+    [52, 58],
     [90, 90],
     [91, 91],
     [4, 7],
     [82, 85],
-    [84, 110],
+    [100, 110],
+    [92, 99],
     [1, 120]
 ];
 
@@ -20,11 +21,6 @@ for (var i = 0, len = rangesToAdd.length; i < len; i++) {
     set.addRange(rangesToAdd[i]);
     console.log('adding', rangesToAdd[i], ':', set._ranges);
 }
-
-
-
-
-
 
 
 // set.remove([2, 17]);
